@@ -6,5 +6,6 @@ data class SearchScreenUIState(
     val searchQuery: String = "",
     val isQueryValid: Boolean = true,
     val isLoading: Boolean = false,
+    val isErrorVisible: Boolean = false,
     val locations: List<Location> = emptyList(),
 )

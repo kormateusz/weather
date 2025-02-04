@@ -31,6 +31,7 @@ class SearchViewModel(
                 searchQuery = query,
                 isQueryValid = isQueryValid,
                 isLoading = isQueryValid,
+                isErrorVisible = false,
                 locations = if (isQueryValid) it.locations else emptyList()
             )
         }
@@ -45,12 +46,19 @@ class SearchViewModel(
             getLocationsUseCase.execute(query)
                 .onSuccess { locations ->
                     _state.update {
-                        it.copy(locations = locations, isLoading = false)
+                        it.copy(
+                            locations = locations,
+                            isLoading = false,
+                            isErrorVisible = false
+                        )
                     }
                 }
                 .onFailure {
                     _state.update {
-                        it.copy(isLoading = false)
+                        it.copy(
+                            isLoading = false,
+                            isErrorVisible = true
+                        )
                     }
                 }
         }

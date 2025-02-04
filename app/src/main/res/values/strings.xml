@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="unknown_exception">An unknown error occurred, please try again later</string>
     <string name="search_placeholder">Search…</string>
-    <string name="search_empty_state_label">Search for location</string>
+    <string name="search_empty_state_label">No search results</string>
     <string name="search_box_error">The city name can only contain letters, spaces, and a hyphen.</string>
 </resources>
