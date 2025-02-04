@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -7,6 +9,10 @@ plugins {
 android {
     namespace = "pl.kormateusz.weather"
     compileSdk = 35
+
+    val secretPropertiesFile = rootProject.file("secret.properties")
+    val secretProperties = Properties()
+    secretProperties.load(secretPropertiesFile.inputStream())
 
     defaultConfig {
         applicationId = "pl.kormateusz.weather"
@@ -19,8 +25,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", secretProperties.getProperty("API_KEY"))
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -28,6 +37,26 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            buildConfigField(
+                "String",
+                "API_URL",
+                "\"https://dataservice.accuweather.com/\""
+            ) // for some reason apidev.accuweather.com doesn't work
+            applicationIdSuffix = ".dev"
+        }
+        create("prod") {
+            dimension = "environment"
+            buildConfigField(
+                "String",
+                "API_URL",
+                "\"https://dataservice.accuweather.com/\""
+            ) // for some reason api.accuweather.com doesn't work
         }
     }
     compileOptions {
@@ -69,6 +98,10 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.android.compat)
     implementation(libs.koin.android.compose)
+
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

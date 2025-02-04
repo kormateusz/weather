@@ -6,6 +6,12 @@ import pl.kormateusz.weather.ui.screens.details.DetailsViewModel
 import pl.kormateusz.weather.ui.screens.search.SearchViewModel
 
 val viewModelModule = module {
-    viewModel { SearchViewModel(mainRouting = get(), validateSearchQueryUseCase = get()) }
+    viewModel {
+        SearchViewModel(
+            mainRouting = get(),
+            validateSearchQueryUseCase = get(),
+            getLocationsUseCase = get(),
+        )
+    }
     viewModel { (value: String) -> DetailsViewModel(value, mainRouting = get()) }
 }

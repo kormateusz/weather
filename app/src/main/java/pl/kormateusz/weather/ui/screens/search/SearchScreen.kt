@@ -69,9 +69,9 @@ fun SearchScreen(viewModel: SearchViewModel) {
                 .padding(horizontal = 16.dp)
         ) {
             SearchBox(
-                modifier = Modifier.zIndex(1f),
                 value = state.searchQuery,
                 isErrorVisible = !state.isQueryValid,
+                isLoading = state.isLoading,
                 errorText = R.string.search_box_error,
                 placeholder = stringResource(id = R.string.search_placeholder),
                 onTextChanged = { viewModel.onQueryChange(it) },
@@ -80,24 +80,16 @@ fun SearchScreen(viewModel: SearchViewModel) {
             if (state.locations.isEmpty()) {
                 EmptyState()
             } else {
-                BodyList(state, viewModel)
+                LazyColumn(
+                    modifier = Modifier.offset(y = (-32).dp).zIndex(-1f),
+                    contentPadding = PaddingValues(top = 32.dp)
+                ) {
+                    items(state.locations) { location ->
+                        ListItem(location, onItemClick = { viewModel.onLocationClick(it) })
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
             }
-        }
-    }
-}
-
-@Composable
-private fun BodyList(
-    state: SearchScreenUIState,
-    viewModel: SearchViewModel
-) {
-    LazyColumn(
-        modifier = Modifier.offset(y = (-16).dp),
-        contentPadding = PaddingValues(top = 32.dp)
-    ) {
-        items(state.locations) { location ->
-            ListItem(location, onItemClick = { viewModel.onLocationClick(it) })
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
