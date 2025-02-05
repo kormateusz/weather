@@ -15,6 +15,11 @@ kotlinxSerializationPlugin = "2.0.0"
 okhttp = "4.12.0"
 retrofit = "2.9.0"
 converterGson = "2.9.0"
+mockitoVersion = "5.7.0"
+mockitoVersionInline = "4.11.0"
+mockitoKotlinVersion = "5.2.1"
+testCoroutinesVersion = "1.8.1"
+turbineVersion = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +49,12 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+
+test-mockito = { module = "org.mockito:mockito-core", version.ref = "mockitoVersion" }
+test-mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoVersionInline" }
+test-mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlinVersion" }
+test-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "testCoroutinesVersion" }
+test-coroutines-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbineVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
