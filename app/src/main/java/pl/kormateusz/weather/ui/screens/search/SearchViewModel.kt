@@ -65,6 +65,6 @@ class SearchViewModel(
     }
 
     fun onLocationClick(location: Location) {
-        mainRouting.navigateToDetailsScreen(location.name)
+        mainRouting.navigateToDetailsScreen(location)
     }
 }

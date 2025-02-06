@@ -24,7 +24,7 @@ fun MainNavHost(navController: NavHostController) {
         }
         composable<DetailsScreen> {
             val detailsScreen: DetailsScreen = it.toRoute()
-            val viewModel = koinViewModel<DetailsViewModel> { parametersOf(detailsScreen.value) }
+            val viewModel = koinViewModel<DetailsViewModel> { parametersOf(detailsScreen.location) }
             DetailsScreen(viewModel)
         }
     }

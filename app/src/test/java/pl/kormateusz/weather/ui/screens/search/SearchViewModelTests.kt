@@ -146,6 +146,6 @@ class SearchViewModelTests {
         viewModel.onLocationClick(location)
 
         // then
-        verify(mainRouting).navigateToDetailsScreen("Warszawa")
+        verify(mainRouting).navigateToDetailsScreen(location)
     }
 }
