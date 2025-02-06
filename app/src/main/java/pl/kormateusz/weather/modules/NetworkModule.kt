@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import pl.kormateusz.weather.BuildConfig
 import pl.kormateusz.weather.data.services.LocationService
+import pl.kormateusz.weather.data.services.WeatherService
 import pl.kormateusz.weather.data.utils.ApiKeyInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,12 +16,13 @@ private const val TIMEOUT = 60L
 val networkModule = module {
     single { ApiKeyInterceptor() }
     single { createApiOkHttpBuilder(get<ApiKeyInterceptor>()) }
-    single { createApiService<LocationService>(BuildConfig.API_URL, get()) }
+    single { createApiService<LocationService>(get()) }
+    single { createApiService<WeatherService>(get()) }
 }
 
-private inline fun <reified T> createApiService(url: String, okHttpClient: OkHttpClient): T =
+private inline fun <reified T> createApiService(okHttpClient: OkHttpClient): T =
     Retrofit.Builder()
-        .baseUrl(url)
+        .baseUrl(BuildConfig.API_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()

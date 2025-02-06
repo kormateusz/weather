@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.serialization.Serializable
 import pl.kormateusz.weather.R
 import pl.kormateusz.weather.domain.models.Location
-import pl.kormateusz.weather.ui.navigation.ComposeRoute
+import pl.kormateusz.weather.ui.navigation.extensions.ComposeRoute
 
 @Serializable
 data class DetailsScreen(val location: Location) : ComposeRoute

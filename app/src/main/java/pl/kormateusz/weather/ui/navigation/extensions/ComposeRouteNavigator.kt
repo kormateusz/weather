@@ -1,4 +1,4 @@
-package pl.kormateusz.weather.ui.navigation
+package pl.kormateusz.weather.ui.navigation.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import pl.kormateusz.weather.ui.navigation.NavigateUp
 
 interface ComposeRoute
 

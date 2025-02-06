@@ -14,5 +14,12 @@ val viewModelModule = module {
             getLocationsUseCase = get(),
         )
     }
-    viewModel { (location: Location) -> DetailsViewModel(location, mainRouting = get()) }
+    viewModel { (location: Location) ->
+        DetailsViewModel(
+            location,
+            mainRouting = get(),
+            dateTimeFormatter = get(),
+            getWeatherForLocationUseCase = get()
+        )
+    }
 }

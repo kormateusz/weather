@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.serialization.Serializable
 import pl.kormateusz.weather.R
 import pl.kormateusz.weather.domain.models.Location
-import pl.kormateusz.weather.ui.navigation.ComposeRoute
+import pl.kormateusz.weather.ui.navigation.extensions.ComposeRoute
 import pl.kormateusz.weather.ui.screens.common.EmptyState
 import pl.kormateusz.weather.ui.screens.common.SearchBox
 

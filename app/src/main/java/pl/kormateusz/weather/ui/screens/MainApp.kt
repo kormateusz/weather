@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import pl.kormateusz.weather.ui.navigation.MainNavHost
-import pl.kormateusz.weather.ui.navigation.NavigatorLaunchedEffect
+import pl.kormateusz.weather.ui.navigation.extensions.NavigatorLaunchedEffect
 import pl.kormateusz.weather.ui.theme.WeatherTheme
 
 @Composable

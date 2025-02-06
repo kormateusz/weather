@@ -3,6 +3,7 @@ package pl.kormateusz.weather
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import pl.kormateusz.weather.modules.appModule
 import pl.kormateusz.weather.modules.networkModule
 import pl.kormateusz.weather.modules.repositoryModule
 import pl.kormateusz.weather.modules.routingModule
@@ -15,6 +16,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
+                appModule,
                 viewModelModule,
                 routingModule,
                 useCaseModule,
