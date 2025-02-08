@@ -6,4 +6,5 @@ data class Weather(
     val dateTime: OffsetDateTime,
     val weatherText: String,
     val temperature: String,
+    val condition: WeatherCondition,
 )

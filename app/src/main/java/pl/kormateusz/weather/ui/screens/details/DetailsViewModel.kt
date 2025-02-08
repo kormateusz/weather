@@ -18,7 +18,8 @@ class DetailsViewModel(
     private val getWeatherForLocationUseCase: GetWeatherForLocationUseCase,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(DetailsUIState(locationName = location.name))
+    private val _state =
+        MutableStateFlow(DetailsUIState(locationName = location.name, isLoading = true))
     val state = _state.asStateFlow()
 
     init {
@@ -27,13 +28,22 @@ class DetailsViewModel(
                 .onSuccess { weather ->
                     _state.update {
                         it.copy(
+                            isLoading = false,
                             dateTime = dateTimeFormatter.toFullDate(weather.dateTime),
                             temperature = weather.temperature,
                             weatherText = weather.weatherText,
+                            condition = weather.condition,
                         )
                     }
                 }
-                .onFailure { }
+                .onFailure {
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isErrorVisible = true,
+                        )
+                    }
+                }
 
         }
     }

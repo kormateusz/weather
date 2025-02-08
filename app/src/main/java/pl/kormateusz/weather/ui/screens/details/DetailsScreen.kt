@@ -1,7 +1,9 @@
 package pl.kormateusz.weather.ui.screens.details
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -30,6 +32,8 @@ import kotlinx.serialization.Serializable
 import pl.kormateusz.weather.R
 import pl.kormateusz.weather.domain.models.Location
 import pl.kormateusz.weather.ui.navigation.extensions.ComposeRoute
+import pl.kormateusz.weather.ui.screens.common.EmptyState
+import pl.kormateusz.weather.ui.screens.common.FullScreenLoader
 
 @Serializable
 data class DetailsScreen(val location: Location) : ComposeRoute
@@ -47,8 +51,13 @@ fun DetailsScreen(viewModel: DetailsViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreenBody(state: DetailsUIState, onBackClick: () -> Unit) {
+    val animatedColor by animateColorAsState(
+        targetValue = state.condition.color,
+        label = "color"
+    )
+
     Scaffold(
-        containerColor = Color.DarkGray,
+        containerColor = animatedColor,
         topBar = {
             TopAppBar(
                 title = { },
@@ -68,58 +77,76 @@ fun DetailsScreenBody(state: DetailsUIState, onBackClick: () -> Unit) {
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp),
-        ) {
-            Text(
-                text = state.locationName,
+        when {
+            state.isLoading -> FullScreenLoader(color = Color.White)
+
+            state.isErrorVisible -> EmptyState(
+                icon = R.drawable.ic_error,
+                text = R.string.unknown_exception,
                 color = Color.White,
-                fontSize = 36.sp,
+            )
+
+            else -> LoadedBody(innerPadding, state)
+        }
+    }
+}
+
+@Composable
+private fun LoadedBody(
+    innerPadding: PaddingValues,
+    state: DetailsUIState
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 24.dp),
+    ) {
+        Text(
+            text = state.locationName,
+            color = Color.White,
+            fontSize = 36.sp,
+        )
+        Text(
+            text = state.dateTime,
+            color = Color.White,
+            fontSize = 14.sp,
+        )
+        Column {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+                    .offset(x = 100.dp),
+                painter = painterResource(state.condition.image),
+                contentDescription = null,
             )
             Text(
-                text = state.dateTime,
+                modifier = Modifier.fillMaxWidth(),
+                text = state.temperature,
+                textAlign = TextAlign.End,
                 color = Color.White,
-                fontSize = 14.sp,
+                fontSize = 64.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Column {
-                Image(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f)
-                        .offset(x = 120.dp),
-                    painter = painterResource(R.drawable.image_1),
-                    contentDescription = null,
-                )
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = state.temperature,
-                    textAlign = TextAlign.End,
-                    color = Color.White,
-                    fontSize = 64.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = state.weatherText,
-                    textAlign = TextAlign.End,
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = state.weatherText,
+                textAlign = TextAlign.End,
+                color = Color.White,
+                fontSize = 24.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
 
 @Composable
 @Preview(showSystemUi = true)
-fun DetailsScreenPreview() {
+private fun DetailsScreenPreview() {
     DetailsScreenBody(
         state = DetailsUIState(
             locationName = "Kraków",
@@ -127,6 +154,24 @@ fun DetailsScreenPreview() {
             temperature = "20°C",
             weatherText = "It's pouring like crazy"
         ),
+        onBackClick = {},
+    )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+private fun DetailsScreenPreviewLoading() {
+    DetailsScreenBody(
+        state = DetailsUIState(isLoading = true),
+        onBackClick = {},
+    )
+}
+
+@Composable
+@Preview(showSystemUi = true)
+private fun DetailsScreenPreviewError() {
+    DetailsScreenBody(
+        state = DetailsUIState(isErrorVisible = true),
         onBackClick = {},
     )
 }

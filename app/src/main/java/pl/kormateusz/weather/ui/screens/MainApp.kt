@@ -1,8 +1,6 @@
 package pl.kormateusz.weather.ui.screens
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,12 +15,10 @@ fun MainApp() {
     NavigatorLaunchedEffect(navController)
 
     WeatherTheme {
-        Box(Modifier.safeDrawingPadding()) {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                MainNavHost(navController)
-            }
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            MainNavHost(navController)
         }
     }
 }
