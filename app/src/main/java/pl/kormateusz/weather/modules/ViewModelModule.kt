@@ -12,6 +12,8 @@ val viewModelModule = module {
             mainRouting = get(),
             validateSearchQueryUseCase = get(),
             getLocationsUseCase = get(),
+            saveSelectedLocationLocallyUseCase = get(),
+            getLocallySavedLocationsUseCase = get(),
         )
     }
     viewModel { (location: Location) ->

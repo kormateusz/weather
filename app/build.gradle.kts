@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -93,6 +95,10 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.navigation)
+
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 
     implementation(libs.koin)
     implementation(libs.koin.android)

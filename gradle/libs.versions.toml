@@ -1,6 +1,7 @@
 [versions]
 agp = "8.4.2"
-kotlin = "1.9.0"
+kotlin = "2.0.21"
+ksp = "2.0.21-1.0.27"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -9,6 +10,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2025.01.01"
 navigation = "2.8.6"
+room = "2.6.1"
 koin = "3.5.5"
 kotlinxSerialization = "1.6.3"
 kotlinxSerializationPlugin = "2.0.0"
@@ -16,7 +18,7 @@ okhttp = "4.12.0"
 retrofit = "2.9.0"
 converterGson = "2.9.0"
 mockitoVersion = "5.7.0"
-mockitoVersionInline = "4.11.0"
+mockitoVersionInline = "5.0.0"
 mockitoKotlinVersion = "5.2.1"
 testCoroutinesVersion = "1.8.1"
 turbineVersion = "1.0.0"
@@ -39,6 +41,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 
 navigation = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
+room = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
 koin = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-android-compat = { module = "io.insert-koin:koin-android-compat", version.ref = "koin" }
@@ -60,4 +66,6 @@ test-coroutines-turbine = { module = "app.cash.turbine:turbine", version.ref = "
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 

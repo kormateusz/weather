@@ -16,6 +16,14 @@ abstract class BaseParamUseCase<T, E> {
     }
 }
 
+abstract class BaseSuspendUseCase<E> {
+    protected abstract suspend fun buildUseCase(): E
+
+    open suspend fun execute(): E {
+        return this.buildUseCase()
+    }
+}
+
 abstract class BaseParamSuspendUseCase<T, E> {
     protected abstract suspend fun buildUseCase(param: T): E
 
