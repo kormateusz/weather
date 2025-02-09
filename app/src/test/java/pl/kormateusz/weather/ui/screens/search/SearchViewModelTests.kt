@@ -15,7 +15,9 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import pl.kormateusz.weather.domain.models.Location
+import pl.kormateusz.weather.domain.usecases.GetLocallySavedLocationsUseCase
 import pl.kormateusz.weather.domain.usecases.GetLocationsUseCase
+import pl.kormateusz.weather.domain.usecases.SaveSelectedLocationLocallyUseCase
 import pl.kormateusz.weather.domain.usecases.ValidateSearchQueryUseCase
 import pl.kormateusz.weather.ui.navigation.MainRouting
 
@@ -32,16 +34,32 @@ class SearchViewModelTests {
     @Mock
     private lateinit var getLocationsUseCase: GetLocationsUseCase
 
+    @Mock
+    private lateinit var saveSelectedLocationLocallyUseCase: SaveSelectedLocationLocallyUseCase
+
+    @Mock
+    private lateinit var getLocallySavedLocationsUseCase: GetLocallySavedLocationsUseCase
+
     private lateinit var viewModel: SearchViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher())
-        viewModel = SearchViewModel(mainRouting, validateSearchQueryUseCase, getLocationsUseCase)
+    }
+
+    private fun setupViewModel(savedLocations: List<Location> = emptyList()) = runTest {
+        whenever(getLocallySavedLocationsUseCase.execute()).thenReturn(savedLocations)
+        viewModel = SearchViewModel(
+            mainRouting,
+            validateSearchQueryUseCase,
+            getLocationsUseCase,
+            saveSelectedLocationLocallyUseCase,
+            getLocallySavedLocationsUseCase,
+        )
     }
 
     @Test
-    fun `onQueryChange with valid query triggers location search`() = runTest {
+    fun `valid query triggers location search`() = runTest {
         // given
         val query = "Kraków"
         val result = listOf(
@@ -50,6 +68,7 @@ class SearchViewModelTests {
         )
         whenever(validateSearchQueryUseCase.execute(query)).thenReturn(true)
         whenever(getLocationsUseCase.execute(query)).thenAnswer { Result.success(result) }
+        setupViewModel()
 
         // when
         viewModel.onQueryChange(query)
@@ -80,10 +99,15 @@ class SearchViewModelTests {
     }
 
     @Test
-    fun `onQueryChange with invalid query does not trigger location search`() = runTest {
+    fun `invalid query does not trigger location search and returns empty list`() = runTest {
         // given
-        val query = ""
+        val query = "123."
+        val savedLocations = listOf(
+            Location("Kraków", "1"),
+            Location("Warszawa", "2"),
+        )
         whenever(validateSearchQueryUseCase.execute(query)).thenReturn(false)
+        setupViewModel(savedLocations)
 
         // when
         viewModel.onQueryChange(query)
@@ -101,13 +125,40 @@ class SearchViewModelTests {
     }
 
     @Test
-    fun `onQueryChange with valid query but API error shows error state`() = runTest {
+    fun `empty query does not trigger location search and returns saved list`() = runTest {
+        // given
+        val query = ""
+        val savedLocations = listOf(
+            Location("Kraków", "1"),
+            Location("Warszawa", "2"),
+        )
+        whenever(validateSearchQueryUseCase.execute(query)).thenReturn(true)
+        setupViewModel(savedLocations)
+
+        // when
+        viewModel.onQueryChange(query)
+
+        // then
+        val state = viewModel.state.value
+        val expectedState = SearchScreenUIState(
+            searchQuery = query,
+            isQueryValid = true,
+            isLoading = true,
+            isErrorVisible = false,
+            locations = savedLocations
+        )
+        assertEquals(expectedState, state)
+    }
+
+    @Test
+    fun `valid query but API error shows error state`() = runTest {
         // given
         val query = "Kraków"
         whenever(validateSearchQueryUseCase.execute(query)).thenReturn(true)
         whenever(getLocationsUseCase.execute(query)).thenAnswer {
             Result.failure<List<Location>>(Exception())
         }
+        setupViewModel()
 
         // when
         viewModel.onQueryChange(query)
@@ -138,14 +189,16 @@ class SearchViewModelTests {
     }
 
     @Test
-    fun `onLocationClick navigates to details screen`() {
+    fun `navigates to details screen and saves selected location`() {
         // given
         val location = Location("Warszawa", "1")
+        setupViewModel()
 
         // when
         viewModel.onLocationClick(location)
 
         // then
+        verify(saveSelectedLocationLocallyUseCase).execute(location)
         verify(mainRouting).navigateToDetailsScreen(location)
     }
 }
