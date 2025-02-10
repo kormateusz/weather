@@ -10,4 +10,12 @@ data class DetailsUIState(
     val isLoading: Boolean = false,
     val isErrorVisible: Boolean = false,
     val condition: WeatherCondition = WeatherCondition.UNKNOWN,
+    val forecastItems: List<ForecastItemUIState> = emptyList()
+)
+
+data class ForecastItemUIState(
+    val date: String = "",
+    val minTemperature: String = "",
+    val maxTemperature: String = "",
+    val condition: WeatherCondition = WeatherCondition.UNKNOWN
 )

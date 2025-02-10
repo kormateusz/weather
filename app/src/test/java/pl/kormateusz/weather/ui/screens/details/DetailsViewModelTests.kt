@@ -15,9 +15,11 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import pl.kormateusz.weather.domain.extensions.DateTimeFormatter
+import pl.kormateusz.weather.domain.models.Forecast
 import pl.kormateusz.weather.domain.models.Location
 import pl.kormateusz.weather.domain.models.Weather
 import pl.kormateusz.weather.domain.models.WeatherCondition
+import pl.kormateusz.weather.domain.usecases.GetForecastForLocationUseCase
 import pl.kormateusz.weather.domain.usecases.GetWeatherForLocationUseCase
 import pl.kormateusz.weather.ui.navigation.MainRouting
 import java.time.OffsetDateTime
@@ -36,6 +38,9 @@ class DetailsViewModelTests {
     @Mock
     private lateinit var getWeatherForLocationUseCase: GetWeatherForLocationUseCase
 
+    @Mock
+    private lateinit var getForecastForLocationUseCase: GetForecastForLocationUseCase
+
     private lateinit var viewModel: DetailsViewModel
 
     private val testLocation = Location(name = "Kraków", key = "123")
@@ -50,7 +55,8 @@ class DetailsViewModelTests {
             testLocation,
             mainRouting,
             dateTimeFormatter,
-            getWeatherForLocationUseCase
+            getWeatherForLocationUseCase,
+            getForecastForLocationUseCase
         )
     }
 
@@ -61,12 +67,22 @@ class DetailsViewModelTests {
             dateTime = OffsetDateTime.of(2025, 2, 9, 10, 0, 0, 0, ZoneOffset.UTC),
             temperature = "15°C",
             weatherText = "Sunny",
-            condition = WeatherCondition.SUNNY
+            condition = WeatherCondition.SUNNY,
+        )
+        val forecast = Forecast(
+            dateTime = OffsetDateTime.of(2025, 2, 10, 10, 0, 0, 0, ZoneOffset.UTC),
+            minTemperature = "15°C",
+            maxTemperature = "15°C",
+            condition = WeatherCondition.MOSTLY_SUNNY
         )
         whenever(getWeatherForLocationUseCase.execute(testLocation.key))
             .thenAnswer { (Result.success(weather)) }
         whenever(dateTimeFormatter.toFullDate(weather.dateTime))
             .thenReturn("8th Feb 2025, 10:00 AM")
+        whenever(dateTimeFormatter.toShortDate(forecast.dateTime))
+            .thenReturn("8th Feb")
+        whenever(getForecastForLocationUseCase.execute(testLocation.key))
+            .thenAnswer { Result.success(listOf(forecast)) }
         setupViewModel()
 
         // then
@@ -91,6 +107,26 @@ class DetailsViewModelTests {
                 condition = WeatherCondition.SUNNY,
             )
             assertEquals(expectedLoadedState, loadedState)
+
+            val updatedState = turbine.awaitItem()
+            val expectedUpdatedState = DetailsUIState(
+                locationName = "Kraków",
+                isLoading = false,
+                isErrorVisible = false,
+                dateTime = "8th Feb 2025, 10:00 AM",
+                temperature = "15°C",
+                weatherText = "Sunny",
+                condition = WeatherCondition.SUNNY,
+                forecastItems = listOf(
+                    ForecastItemUIState(
+                        date = "8th Feb",
+                        minTemperature = "15°C",
+                        maxTemperature = "15°C",
+                        condition = WeatherCondition.MOSTLY_SUNNY,
+                    )
+                )
+            )
+            assertEquals(expectedUpdatedState, updatedState)
         }
     }
 
@@ -99,6 +135,8 @@ class DetailsViewModelTests {
         // given
         whenever(getWeatherForLocationUseCase.execute(testLocation.key))
             .thenAnswer { Result.failure<Weather>(Exception()) }
+        whenever(getForecastForLocationUseCase.execute(testLocation.key))
+            .thenAnswer { Result.success(emptyList<Forecast>()) }
 
         setupViewModel()
 
@@ -128,6 +166,8 @@ class DetailsViewModelTests {
         // given
         whenever(getWeatherForLocationUseCase.execute(testLocation.key))
             .thenAnswer { Result.failure<Weather>(Exception()) }
+        whenever(getForecastForLocationUseCase.execute(testLocation.key))
+            .thenAnswer { Result.success(emptyList<Forecast>()) }
         setupViewModel()
 
         // when

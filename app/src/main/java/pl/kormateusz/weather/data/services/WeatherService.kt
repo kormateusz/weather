@@ -1,5 +1,6 @@
 package pl.kormateusz.weather.data.services
 
+import pl.kormateusz.weather.data.models.responses.ForecastResponse
 import pl.kormateusz.weather.data.models.responses.WeatherResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -12,4 +13,11 @@ interface WeatherService {
         @Path("locationId") locationId: String,
         @Query("language") languageCode: String,
     ): Response<List<WeatherResponse>>
+
+    @GET("forecasts/v1/daily/5day/{locationId}")
+    suspend fun getForecast(
+        @Path("locationId") locationId: String,
+        @Query("language") languageCode: String,
+        @Query("metric") metric: Boolean = true,
+    ): Response<ForecastResponse>
 }

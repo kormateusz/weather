@@ -1,7 +1,7 @@
 package pl.kormateusz.weather.data.models.responses
 
 import com.google.gson.annotations.SerializedName
-import pl.kormateusz.weather.domain.extensions.toLocalDateTime
+import pl.kormateusz.weather.domain.extensions.toOffsetDateTime
 import pl.kormateusz.weather.domain.models.Weather
 import pl.kormateusz.weather.domain.models.WeatherCondition
 
@@ -22,8 +22,8 @@ data class MetricTemperatureResponse(
 )
 
 fun WeatherResponse.toDomain() = Weather(
-    dateTime = dateTime.toLocalDateTime(),
+    dateTime = dateTime.toOffsetDateTime(),
     weatherText = weatherText,
     temperature = "${temperatureResponse.metricTemperatureResponse.value}°${temperatureResponse.metricTemperatureResponse.unit}",
-    condition = WeatherCondition.fromCode(weatherIcon)
+    condition = WeatherCondition.fromCode(weatherIcon),
 )

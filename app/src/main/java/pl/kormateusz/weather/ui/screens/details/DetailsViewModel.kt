@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import pl.kormateusz.weather.domain.extensions.DateTimeFormatter
 import pl.kormateusz.weather.domain.models.Location
+import pl.kormateusz.weather.domain.usecases.GetForecastForLocationUseCase
 import pl.kormateusz.weather.domain.usecases.GetWeatherForLocationUseCase
 import pl.kormateusz.weather.ui.navigation.MainRouting
 
@@ -16,6 +17,7 @@ class DetailsViewModel(
     private val mainRouting: MainRouting,
     private val dateTimeFormatter: DateTimeFormatter,
     private val getWeatherForLocationUseCase: GetWeatherForLocationUseCase,
+    private val getForecastForLocationUseCase: GetForecastForLocationUseCase,
 ) : ViewModel() {
 
     private val _state =
@@ -44,7 +46,24 @@ class DetailsViewModel(
                         )
                     }
                 }
+        }
 
+        viewModelScope.launch {
+            getForecastForLocationUseCase.execute(location.key)
+                .onSuccess { forecast ->
+                    _state.update {
+                        it.copy(
+                            forecastItems = forecast.map { forecast ->
+                                ForecastItemUIState(
+                                    date = dateTimeFormatter.toShortDate(forecast.dateTime),
+                                    minTemperature = forecast.minTemperature,
+                                    maxTemperature = forecast.maxTemperature,
+                                    condition = forecast.condition,
+                                )
+                            }
+                        )
+                    }
+                }
         }
     }
 

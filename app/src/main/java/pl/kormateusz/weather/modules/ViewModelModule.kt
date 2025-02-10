@@ -21,7 +21,8 @@ val viewModelModule = module {
             location,
             mainRouting = get(),
             dateTimeFormatter = get(),
-            getWeatherForLocationUseCase = get()
+            getWeatherForLocationUseCase = get(),
+            getForecastForLocationUseCase = get(),
         )
     }
 }

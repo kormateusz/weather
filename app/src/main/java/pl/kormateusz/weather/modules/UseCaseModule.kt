@@ -2,6 +2,7 @@ package pl.kormateusz.weather.modules
 
 import org.koin.dsl.module
 import pl.kormateusz.weather.domain.usecases.GetCurrentLanguageCodeUseCase
+import pl.kormateusz.weather.domain.usecases.GetForecastForLocationUseCase
 import pl.kormateusz.weather.domain.usecases.GetLocallySavedLocationsUseCase
 import pl.kormateusz.weather.domain.usecases.GetLocationsUseCase
 import pl.kormateusz.weather.domain.usecases.GetWeatherForLocationUseCase
@@ -19,6 +20,12 @@ val useCaseModule = module {
     }
     factory {
         GetWeatherForLocationUseCase(
+            weatherRepository = get(),
+            getCurrentLanguageCodeUseCase = get()
+        )
+    }
+    factory {
+        GetForecastForLocationUseCase(
             weatherRepository = get(),
             getCurrentLanguageCodeUseCase = get()
         )
