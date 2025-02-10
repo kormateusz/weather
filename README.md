@@ -9,6 +9,7 @@
 ### Tech stack
 - MVI
 - Jetpack Compose
+- Koin
 - Compose Navigation
 - kotlin coroutines
 - Room
