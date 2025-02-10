@@ -1,9 +1,9 @@
 ## Demo Weather app
 
 ### Screenshots
-<img src="https://github.com/user-attachments/assets/c3f8f868-7551-4cbc-85ac-b71149454d29" width="300"/>
-<img src="https://github.com/user-attachments/assets/eb4cd1f5-7887-4e21-84cf-3423165fb5d4" width="300"/>
-<img src="https://github.com/user-attachments/assets/fdfb2acd-1e9a-4139-bcd5-303d7bf70ece" width="300"/>
+<img src="https://github.com/user-attachments/assets/c3f8f868-7551-4cbc-85ac-b71149454d29" width="240"/>
+<img src="https://github.com/user-attachments/assets/eb4cd1f5-7887-4e21-84cf-3423165fb5d4" width="240"/>
+<img src="https://github.com/user-attachments/assets/fdfb2acd-1e9a-4139-bcd5-303d7bf70ece" width="240"/>
 
 
 ### Tech stack
